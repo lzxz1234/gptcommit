@@ -18,6 +18,7 @@ pub(crate) fn get_diffs() -> Result<String> {
             "--staged",
             "--ignore-all-space",
             "--diff-algorithm=minimal",
+            // "--function-context",
             "--no-ext-diff",
             "--no-color",
         ],
