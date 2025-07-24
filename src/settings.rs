@@ -211,9 +211,6 @@ pub(crate) struct Settings {
     pub openai: Option<OpenAISettings>,
     pub prompt: Option<PromptSettings>,
     pub output: Option<OutputSettings>,
-    /// Whether to run githook when amending the commit
-    pub allow_amend: Option<bool>,
-    /// Files to ignore, format similar to gitignore
     pub file_ignore: Option<Vec<String>>,
 }
 

@@ -77,12 +77,8 @@ fn get_llm_client(settings: &Settings) -> Box<dyn LlmClient> {
 }
 
 pub(crate) async fn main(settings: Settings, args: PrepareCommitMsgArgs) -> Result<()> {
-    match (args.commit_source, settings.allow_amend) {
-        (CommitSource::Empty, _) | (CommitSource::Message, _) | (CommitSource::Commit, Some(true)) => {}
-        (CommitSource::Commit, _) => {
-            println!("🤖 Skipping gptcommit since we're amending a commit. Change this behavior with `gptcommit config set allow_amend true`");
-            return Ok(());
-        }
+    match (args.commit_source) {
+        (CommitSource::Empty) | (CommitSource::Message) | (CommitSource::Commit) => {}
         _ => {
             println!(
                 "🤖 Skipping gptcommit because the githook isn't set up for the \"{}\" commit mode.",
@@ -117,14 +113,6 @@ pub(crate) async fn main(settings: Settings, args: PrepareCommitMsgArgs) -> Resu
     } else {
         String::new()
     };
-    if settings.allow_amend.unwrap_or(false) {
-        original_message = original_message
-            .lines()
-            .map(|l| format!("# {l}"))
-            .collect::<Vec<String>>()
-            .join("\n");
-        original_message = format!("### BEGIN GIT COMMIT BEFORE AMEND\n{original_message}\n### END GIT COMMIT BEFORE AMEND\n");
-    }
     let message_to_write = if original_message.is_empty() {
         commit_message
     } else {
