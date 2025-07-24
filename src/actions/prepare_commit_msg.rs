@@ -77,8 +77,8 @@ fn get_llm_client(settings: &Settings) -> Box<dyn LlmClient> {
 }
 
 pub(crate) async fn main(settings: Settings, args: PrepareCommitMsgArgs) -> Result<()> {
-    match (args.commit_source) {
-        (CommitSource::Empty) | (CommitSource::Message) | (CommitSource::Commit) => {}
+    match args.commit_source {
+        CommitSource::Empty | CommitSource::Message | CommitSource::Commit => {}
         _ => {
             println!(
                 "🤖 Skipping gptcommit because the githook isn't set up for the \"{}\" commit mode.",
@@ -108,7 +108,7 @@ pub(crate) async fn main(settings: Settings, args: PrepareCommitMsgArgs) -> Resu
     let commit_message = summarization_client.get_commit_message(file_diffs).await?;
 
     // prepend output to commit message
-    let mut original_message: String = if args.commit_msg_file.is_file() {
+    let original_message: String = if args.commit_msg_file.is_file() {
         fs::read_to_string(&args.commit_msg_file)?
     } else {
         String::new()
