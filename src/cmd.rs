@@ -26,7 +26,7 @@ pub(crate) fn find_executable(name: &str, error_msg: &str) -> Result<PathBuf> {
             error_msg
         )
     })?;
-    info!("Found {} executable at {:?}", name, path);
+    println!("Found {} executable at {:?}", name, path);
 
     Ok(path)
 }

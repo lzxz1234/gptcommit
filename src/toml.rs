@@ -74,6 +74,7 @@ the-force = { value = "surrounds-you" }
             "file_ignore",
             "model_provider",
             "openai.api_base",
+            "openai.api_key",
             "openai.model",
             "openai.proxy",
             "openai.retries",

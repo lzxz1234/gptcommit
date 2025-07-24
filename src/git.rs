@@ -18,7 +18,6 @@ pub(crate) fn get_diffs() -> Result<String> {
             "--staged",
             "--ignore-all-space",
             "--diff-algorithm=minimal",
-            "--function-context",
             "--no-ext-diff",
             "--no-color",
         ],
@@ -41,11 +40,14 @@ pub(crate) fn get_hooks_path() -> Result<PathBuf> {
 
     let stdout = String::from_utf8(command_output.stdout).expect("Invalid UTF-8");
     let rel_hooks_path = stdout.lines().last().unwrap().to_string();
-    info!("Creating dir at {}", rel_hooks_path);
-    // create dirs first otherwise canonicalize will fail
-    fs::create_dir_all(&rel_hooks_path)?;
-    #[cfg(unix)]
-    fs::set_permissions(&rel_hooks_path, Permissions::from_mode(0o700))?;
+    // if hooks dir doesn't exist, create it
+    if !std::path::Path::new(&rel_hooks_path).exists() {
+        info!("Creating dir at {}", rel_hooks_path);
+        // create dirs first otherwise canonicalize will fail
+        fs::create_dir_all(&rel_hooks_path)?;
+        #[cfg(unix)]
+        fs::set_permissions(&rel_hooks_path, Permissions::from_mode(0o700))?;
+    }
     // turn relative path into absolute path
     let hooks_path = std::fs::canonicalize(rel_hooks_path)?;
     Ok(hooks_path)

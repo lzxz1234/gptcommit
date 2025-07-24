@@ -78,9 +78,7 @@ fn get_llm_client(settings: &Settings) -> Box<dyn LlmClient> {
 
 pub(crate) async fn main(settings: Settings, args: PrepareCommitMsgArgs) -> Result<()> {
     match (args.commit_source, settings.allow_amend) {
-        (CommitSource::Empty, _)
-        | (CommitSource::Message, _)
-        | (CommitSource::Commit, Some(true)) => {}
+        (CommitSource::Empty, _) | (CommitSource::Message, _) | (CommitSource::Commit, Some(true)) => {}
         (CommitSource::Commit, _) => {
             println!("🤖 Skipping gptcommit since we're amending a commit. Change this behavior with `gptcommit config set allow_amend true`");
             return Ok(());

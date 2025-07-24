@@ -22,7 +22,7 @@ pub(crate) async fn main(settings: Settings) -> Result<()> {
     // confirm in git root
     let hooks_path = get_hooks_path()?;
 
-    info!(
+    println!(
         "Found git hooks path for current git repo {}",
         hooks_path.display()
     );
@@ -31,7 +31,7 @@ pub(crate) async fn main(settings: Settings) -> Result<()> {
         "Installing git hook to {}",
         hooks_path.display().to_string().bold()
     );
-    info!("Overwriting file at {}", prepare_commit_msg_path.display());
+    println!("Overwriting file at {}", prepare_commit_msg_path.display());
     fs::write(
         &prepare_commit_msg_path,
         include_str!("../../prepare-commit-msg"),
