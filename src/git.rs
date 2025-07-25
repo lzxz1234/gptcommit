@@ -8,7 +8,6 @@ use git2::{DiffOptions, Repository};
 #[cfg(unix)]
 use std::{fs::Permissions, os::unix::prelude::PermissionsExt};
 
-use crate::cmd;
 use anyhow::{bail, Result};
 
 pub(crate) fn get_diffs() -> Result<String> {

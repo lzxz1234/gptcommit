@@ -104,6 +104,8 @@ pub(crate) async fn main(settings: Settings, args: PrepareCommitMsgArgs) -> Resu
         git::get_diffs()?
     };
 
+    debug!("{}", "🤖 Diff Summary:".green().bold());
+    debug!("{}", output);
     let file_diffs = output.split_prefix_inclusive("\ndiff --git ");
     let commit_message = summarization_client.get_commit_message(file_diffs).await?;
 
