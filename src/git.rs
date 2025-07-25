@@ -4,6 +4,7 @@ use std::{
     process::Command,
 };
 
+use git2::{DiffOptions, Repository};
 #[cfg(unix)]
 use std::{fs::Permissions, os::unix::prelude::PermissionsExt};
 
@@ -11,20 +12,26 @@ use crate::cmd;
 use anyhow::{bail, Result};
 
 pub(crate) fn get_diffs() -> Result<String> {
-    let output = cmd::run_command(
-        "git",
-        &[
-            "diff",
-            "--staged",
-            "--ignore-all-space",
-            "--diff-algorithm=minimal",
-            // "--function-context",
-            "--no-ext-diff",
-            "--no-color",
-        ],
-    )?;
+    let repo = Repository::open_from_env()?;
+    let head = repo.head()?.peel_to_tree()?;
+    let mut opts = DiffOptions::new();
+    opts.ignore_whitespace(true);
+    opts.minimal(true);
+    let diff = repo.diff_tree_to_index(Some(&head), None, Some(&mut opts))?;
+    let mut patches = String::new();
+    diff.print(git2::DiffFormat::Patch, |_delta, _hunk, line| {
+        let sign = match line.origin() {
+            'H' | 'F' | 'B' => ' ',
+            _ => line.origin(),
+        };
+        patches.push(sign);
+        patches.push_str(
+            std::str::from_utf8(line.content()).unwrap(),
+        );
+        true
+    })?;
 
-    Ok(output)
+    Ok(patches)
 }
 
 /// Given current working directory, return path to .git/hooks

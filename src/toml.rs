@@ -70,11 +70,9 @@ the-force = { value = "surrounds-you" }
 
     fn get_config_keys() -> Vec<&'static str> {
         vec![
-            "allow_amend",
             "file_ignore",
             "model_provider",
             "openai.api_base",
-            "openai.api_key",
             "openai.model",
             "openai.proxy",
             "openai.retries",
