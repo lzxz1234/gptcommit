@@ -118,6 +118,8 @@ pub(crate) async fn main(settings: Settings, args: PrepareCommitMsgArgs) -> Resu
     } else {
         format!("{original_message}\n\n{commit_message}")
     };
+    println!("{}", "🤖 OpenAI Summary:".green().bold());
+    println!("{}", message_to_write);
     fs::write(&args.commit_msg_file, message_to_write)?;
 
     Ok(())
